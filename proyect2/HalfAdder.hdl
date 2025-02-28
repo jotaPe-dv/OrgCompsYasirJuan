@@ -1,0 +1,15 @@
+CHIP HalfAdder {
+    IN a, b;
+    OUT sum, carry;
+
+    PARTS:
+    // sum = a ⊕ b
+    Nand(a=a, b=b, out=nandAB);
+    Nand(a=a, b=nandAB, out=half1);
+    Nand(a=b, b=nandAB, out=half2);
+    Nand(a=half1, b=half2, out=sum);
+
+    // carry = a ⋅ b
+    Nand(a=a, b=b, out=nandCarry);
+    Nand(a=nandCarry, b=nandCarry, out=carry);
+}

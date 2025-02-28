@@ -1,0 +1,12 @@
+// Full Adder: Usa dos Half Adder para sumar tres bits.
+CHIP FullAdder {
+    IN a, b, c;
+    OUT sum, carry;
+
+    PARTS:
+
+    HalfAdder(a=a, b=b, sum=abSum, carry=abCarry);
+    HalfAdder(a=abSum, b=c, sum=sum, carry=carryTemp);
+
+    Or(a=abCarry, b=carryTemp, out=carry);
+}
