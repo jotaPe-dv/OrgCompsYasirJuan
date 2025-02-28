@@ -1,0 +1,147 @@
+- Parcial 1: HDL code - Logic Gates
+
+Aquí se presenta el código para cada una de las compuertas y adders requeridos para el parcial.
+
+Solución:
+
+//----------------------------------------------------------
+
+// Sección 1.4:
+
+// XOR construido con NAND
+CHIP Xor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    Nand(a=a, b=b, out=nandAB);    // NAND(a, b)
+    Nand(a=a, b=nandAB, out=part1); // NAND(a, NAND(a, b))
+    Nand(a=b, b=nandAB, out=part2); // NAND(b, NAND(a, b))
+    Nand(a=part1, b=part2, out=out); // XOR(a, b)
+}
+//----------------------------------------------------------
+
+// Sección 2.1:
+
+// AND construido con NAND
+CHIP And {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    Nand(a=a, b=b, out=nandOut);
+    Nand(a=nandOut, b=nandOut, out=out);
+}
+//----------------------------------------------------------
+
+// Sección 3.4:
+
+// HalfAdder construido con NAND
+CHIP HalfAdder {
+    IN a, b;
+    OUT sum, carry;
+
+    PARTS:
+    // sum = a ⊕ b
+    Nand(a=a, b=b, out=nandAB);
+    Nand(a=a, b=nandAB, out=half1);
+    Nand(a=b, b=nandAB, out=half2);
+    Nand(a=half1, b=half2, out=sum);
+
+    // carry = a ⋅ b
+    Nand(a=a, b=b, out=nandCarry);
+    Nand(a=nandCarry, b=nandCarry, out=carry);
+}
+//----------------------------------------------------------
+
+// Sección 4.4:
+
+// Full Adder: usa dos Half Adder
+CHIP FullAdder {
+    IN a, b, c;
+    OUT sum, carry;
+
+    PARTS:
+
+    HalfAdder(a=a, b=b, sum=abSum, carry=abCarry);
+    HalfAdder(a=abSum, b=c, sum=sum, carry=carryTemp);
+
+    Or(a=abCarry, b=carryTemp, out=carry);
+}
+//----------------------------------------------------------
+
+// Sección 5.1:
+
+// Adder de 16 bits
+CHIP Add16 {
+    IN a[16], b[16];
+    OUT out[16];
+
+    PARTS:
+    FullAdder(a=a[0],  b=b[0],  c=false, sum=out[0],  carry=c1);
+    FullAdder(a=a[1],  b=b[1],  c=c1,    sum=out[1],  carry=c2);
+    FullAdder(a=a[2],  b=b[2],  c=c2,    sum=out[2],  carry=c3);
+    FullAdder(a=a[3],  b=b[3],  c=c3,    sum=out[3],  carry=c4);
+    FullAdder(a=a[4],  b=b[4],  c=c4,    sum=out[4],  carry=c5);
+    FullAdder(a=a[5],  b=b[5],  c=c5,    sum=out[5],  carry=c6);
+    FullAdder(a=a[6],  b=b[6],  c=c6,    sum=out[6],  carry=c7);
+    FullAdder(a=a[7],  b=b[7],  c=c7,    sum=out[7],  carry=c8);
+    FullAdder(a=a[8],  b=b[8],  c=c8,    sum=out[8],  carry=c9);
+    FullAdder(a=a[9],  b=b[9],  c=c9,    sum=out[9],  carry=c10);
+    FullAdder(a=a[10], b=b[10], c=c10,   sum=out[10], carry=c11);
+    FullAdder(a=a[11], b=b[11], c=c11,   sum=out[11], carry=c12);
+    FullAdder(a=a[12], b=b[12], c=c12,   sum=out[12], carry=c13);
+    FullAdder(a=a[13], b=b[13], c=c13,   sum=out[13], carry=c14);
+    FullAdder(a=a[14], b=b[14], c=c14,   sum=out[14], carry=c15);
+    FullAdder(a=a[15], b=b[15], c=c15,   sum=out[15], carry=c16);
+}
+//----------------------------------------------------------
+
+// Sección 6:
+
+// ALU
+CHIP ALU {
+   IN
+      x[16], y[16],  // 16-bit 
+      zx, // 0 x
+      nx, // negarx
+      zy, // 0 y
+      ny, // negary
+      f,  // out = x + y si 1 o x & y si 0
+      no; // negar salida
+
+   OUT
+      out[16], // 16-bit output
+      zr, // 1 en caso de out == 0
+      ng; // 1 si (out < 0),  
+
+   PARTS:
+      // x = 0 o negar x
+      Mux16(a=x, sel=zx, out=x1);
+      Not16(in=x1, out=negatedX);
+      Mux16(a=x1, b=negatedX, sel=nx, out=x2);
+
+      // Y = 0 o negar y
+      Mux16(a=y, sel=zy, out=y1);
+      Not16(in=y1, out=negatedY);
+      Mux16(a=y1, b=negatedY, sel=ny, out=y2);
+
+      // x + y O x & y
+      Add16(a=x2, b=y2, out=added);
+      And16(a=x2, b=y2, out=xyAnd);
+      Mux16(a=xyAnd, b=added, sel=f, out=result);
+
+      // negar salida
+      Not16(in=result, out=negatedResult);
+      Mux16(a=result, b=negatedResult, sel=no, out=out, out[15]=firstOut, out[0..7]=finalLeft, out[8..15]=finalRight);
+
+      // output == 0 (zr)
+      Or8Way(in=finalLeft, out=zrl);
+      Or8Way(in=finalRight, out=zrr);
+      Or(a=zrl, b=zrr, out=nzr);
+      Not(in=nzr, out=zr);
+
+      // output < 0 (ng)
+      And(a=firstOut, b=true, out=ng);
+}
+//----------------------------------------------------------
