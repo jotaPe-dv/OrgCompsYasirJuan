@@ -3,7 +3,7 @@
 ## Juan Pablo Rua
 ## Yasir Blandon
 
-### El repositorio contiene tres carpetas: (Proyect 1, Proyect2 y Parcial completo)
+### El repositorio contiene tres carpetas: (Proyect 1, Proyect2 y Parcial1Completo)
 
 En la carpeta Proyect1 se encuentran los archivos HDL correspondientes a la capeta Proyecto 1 desarollada en NAND2TETRIS
 
