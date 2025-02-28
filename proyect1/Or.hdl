@@ -1,0 +1,10 @@
+// OR construido con NAND
+CHIP Or {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    Nand(a=a, b=a, out=notA);  // NOT(a) usando NAND
+    Nand(a=b, b=b, out=notB);  // NOT(b) usando NAND
+    Nand(a=notA, b=notB, out=out); // OR(a, b) = NOT(NOT(a) AND NOT(b))
+}

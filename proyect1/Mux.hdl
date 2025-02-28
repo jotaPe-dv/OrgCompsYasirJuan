@@ -1,0 +1,11 @@
+// MUX construido solo con NAND
+CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+
+    PARTS:
+    Nand(a=sel, b=sel, out=notSel);   // NOT(sel)
+    Nand(a=a, b=notSel, out=aPart);   // a AND NOT(sel)
+    Nand(a=b, b=sel, out=bPart);      // b AND sel
+    Nand(a=aPart, b=bPart, out=out);  // (a AND NOT(sel)) OR (b AND sel)
+}

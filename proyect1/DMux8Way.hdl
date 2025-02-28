@@ -1,0 +1,13 @@
+//DMux8Way
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    // Put your code here:
+    // Use sel[2] to select a/b/c/d or e/f/g/h buses.
+    DMux(in=in, sel=sel[2], a=outABCD, b=outEFGH);
+    // Use sel[0..1] to select a/b/c/d or e/f/g/h as output
+    DMux4Way(in=outABCD, sel=sel[0..1], a=a, b=b, c=c, d=d);
+    DMux4Way(in=outEFGH, sel=sel[0..1], a=e, b=f, c=g, d=h);
+}

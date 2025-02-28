@@ -1,0 +1,14 @@
+//Mux4Way16
+CHIP Mux4Way16 {
+    IN a[16], b[16], c[16], d[16], sel[2];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    // Use sel[0] to select a/b or c/d buses.
+    Mux16(a=a, b=b, sel=sel[0], out=muxAB);
+    Mux16(a=c, b=d, sel=sel[0], out=muxCD);
+    // Use sel[1] to select output buses.
+    // Eiither a/b or c/d will be selected.
+    Mux16(a=muxAB, b=muxCD, sel=sel[1], out=out);
+}

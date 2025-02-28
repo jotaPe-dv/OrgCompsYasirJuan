@@ -1,0 +1,11 @@
+// XOR construido solo con NAND
+CHIP Xor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    Nand(a=a, b=b, out=nandAB);    // NAND(a, b)
+    Nand(a=a, b=nandAB, out=part1); // NAND(a, NAND(a, b))
+    Nand(a=b, b=nandAB, out=part2); // NAND(b, NAND(a, b))
+    Nand(a=part1, b=part2, out=out); // XOR(a, b)
+}
