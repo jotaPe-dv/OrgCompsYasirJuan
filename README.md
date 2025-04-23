@@ -11,3 +11,5 @@ En la carpeta Proyect2 se encuentran los archivos HDL correspondientes a la cape
 
 En la capeta Parcial1Completo se encuentra dos archivos, PARCIAL 1 HDL code.txt el cual contiene los HDL especificados y requeridos en el parcial 1.
 El segundo archivo PARCIAL OC.pdf en el cual se encuentran escaneados los ejercicios correspondientes a el parcial #1 
+
+En la carpeta Parcial2Completo se encuentra el archivo del marco teorico correspondiente a el examen #2
